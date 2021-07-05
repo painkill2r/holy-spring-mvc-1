@@ -1,7 +1,9 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -118,6 +120,39 @@ public class RequestParamController {
     @RequestMapping("/request-param-map")
     public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
         log.info("username = {}, age = {}", paramMap.get("username"), paramMap.get("age"));
+
+        return "ok";
+    }
+
+    /**
+     * @param helloData
+     * @return
+     * @ModelAttribute 동작 과정
+     * 1. HelloData 객체 생성.
+     * 2. 요청 파라미터 이름으로 HelloData 객체의 프로퍼티를 찾음.
+     * 3. 해당 프로퍼티의 setter를 호출해서 파라미터 값을 입력(바인딩).
+     * - 파라미터 이름이 username이면 setUsername() 메소드를 찾아 호출하면서 값을 입력함.
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+        log.info("username = {}, age = {}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData = {}", helloData);
+
+        return "ok";
+    }
+
+    /**
+     * @param helloData
+     * @return
+     * @ModelAttribute 는 생략 가능함.
+     * (단, Argument  Resolver로 지정된 타입은 @ModelAttribute를 적용할 수 없음. ex) HttpServletRequest)
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+        log.info("username = {}, age = {}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData = {}", helloData);
 
         return "ok";
     }
